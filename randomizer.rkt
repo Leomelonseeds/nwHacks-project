@@ -37,3 +37,4 @@
 ;; chance is Natural; rarity %, where higher numbers are more common
 (define (make-head (circle 15 "solid" "blue") 10))
 
+(define hello "hello-world")
