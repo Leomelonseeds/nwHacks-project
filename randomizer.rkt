@@ -37,10 +37,3 @@
 ;; Separate function
 ;; Signature: (listof Part) -> (listof (listof Part))
 ;; Creates an array of the list of each body part
-
-
-<<<<<<< HEAD
- 
-=======
-(define hello "hello-world")
->>>>>>> 8d878a6718c1297403cfa75dfda556d4c321befb
