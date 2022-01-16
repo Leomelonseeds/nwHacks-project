@@ -7,33 +7,36 @@
 ;; _____________________________________________________________________________
 ;; DATA DEFINITIONS:
 
-;; Head, body, arms, legs
+;; Class is String, one of:
+;; "head", "torso", "arms" "legs"
+;; Represents the body portion the part represents.
 
 
+;; Part is
+(define-struct part (class image chance))
+;; class is Class ; the body portion
+;; image is Image ; the image of the portion
+;; chance is Natural ; weighted rarity, where higher numbers are more common
 
-;; Head is
-(define-struct head (image chance))
-;; image is Image ; head image
-;; chance is Natural ; rarity %, where higher numbers are more common
+;; Part list. Add your own image parts here
+(define part-list
+  (list 
+   (make-part "head" (circle 20 "solid" "blue") 5)
+   (make-part "head" (rectangle 20 10 "solid" "green") 6)
+   (make-part "torso" (rectangle 10 30 "solid" "black") 1)
+   (make-part "torso" (rectangle 20 30 "solid" "green") 2)
+   (make-part "arms" (rectangle 30 10 "solid" "white") 3)
+   (make-part "arms" (rectangle 40 10 "solid" "white") 1)
+   (make-part "legs" (rectangle 10 60 "solid" "red") 5)
+   (make-part "legs" (rectangle 20 70 "solid" "white") 2)
+   ))
 
-(define head1 (make-head (circle 20 "solid" "blue") 5))
-(define head2 (make-head (rectangle 20 10 "solid" "green") 6))
+;; _____________________________________________________________________________
+;; FUNCTIONS:
 
-;; Body is
-(define-struct body (image chance))
-;; image is Image ; body image
-;; chance is Natural; rarity %, where higher numbers are more common
-(define (make-head (circle 15 "solid" "blue") 10))
+;; Separate function
+;; Signature: (listof Part) -> (listof (listof Part))
+;; Creates an array of the list of each body part
 
-;; Arms is
-(define-struct arms (image chance))
-;; image is Image ; arms image
-;; chance is Natural; rarity %, where higher numbers are more common
-(define (make-head (circle 15 "solid" "blue") 10))
 
-;; Legs is
-(define-struct legs (image chance))
-;; image is Image ; legs image
-;; chance is Natural; rarity %, where higher numbers are more common
-(define (make-head (circle 15 "solid" "blue") 10))
-
+ 
