@@ -79,8 +79,8 @@
 
 ;; The order that the body parts should be overlayed. This value also determines
 ;; which classes in the part-list is used. The first defined class will render
-;; on the top layer, and the last class will be put on the bottom, and vv.
-(define part-order (list "head" "torso" "arms" "legs" "accessory"))
+;; on the bottom layer, and the last class will be put on the top.
+(define part-order (list "legs" "arms" "torso" "head" "accessory"))
 
 ;; Width and height of the image canvas.
 (define WIDTH 1200)
@@ -93,7 +93,14 @@
         "green"
         "blue"
         "yellow"
-        "purple"))
+        "purple"
+        "grey"
+        "turquoise"
+        "light turquoise"
+        "cyan"
+        "goldenrod"
+        "light red"
+        "pink"))
 
 ;; Hotkeys
 (define HOTKEY-NEW-IMAGE " ")
@@ -121,6 +128,7 @@
 (define (render-world ri)
   ri)
 
+
 ;; handle-key
 ;; Signature: RandomizerImage KeyEvent -> RandomizerImage
 ;; Manages creation of new images and saving liked images
@@ -133,6 +141,7 @@
              (error "Save failed."))]
         [else ri]))
 
+;; randomizer
 ;; Signature: (listof (listof Part)) -> Image
 ;; Takes a list of all of the parts of the image and randomly selects
 ;; one of each part to be added to a (listof Image), then returns rendered img
@@ -161,7 +170,7 @@
           ;; Signature: Natural Image (listof Image) -> (listof Image)
           (define (randomizer-p chance img rsf3)
             (cond [(or (< chance 1) (not (integer? chance)))
-                   (error "PLEASE ENSURE EACH CHANCE VALUE FOLLOWS THE RULES")]
+                   (error "Please ensure chance is larger than one.")]
                   [else
                    (local [(define (f1 n) img)]
                      (append rsf3 (build-list chance f1)))]))
@@ -189,6 +198,7 @@
 
 ;; render-image
 ;; Signature: (listof Part) -> Image
+;; Compiles a list of parts into a whole image
 
 (define (render-image lop)
   (cond [(empty? lop) (rectangle WIDTH
@@ -200,6 +210,7 @@
 
 ;; background-randomizer
 ;; Signature: (listof String) -> String
+;; Randomizes the background colir
 
 (define (background-randomizer los)
   (list-ref los (random (length los))))
