@@ -19,7 +19,10 @@
 ;; image is Image ; the image of the portion
 ;; chance is Natural ; weighted rarity, where higher numbers are more common
 
-;; Part list. Add your own image parts here
+;;______________________________________________________________________________
+;; USER CONFIGURATION:
+
+;; Part list. Add your own image parts here. Order does not matter
 (define part-list
   (list 
    (make-part "head" (circle 20 "solid" "blue") 5)
@@ -31,6 +34,11 @@
    (make-part "legs" (rectangle 20 70 "solid" "white") 2)
    (make-part "head" (rectangle 20 10 "solid" "green") 6)
    ))
+
+;; The order that the body parts should be overlayed. This value also determines
+;; which classes in the part-list is used. The first defined class will render
+;; on the top layer, and the last class will be put on the bottom, and vv.
+(define part-order (list "head" "torso" "arms" "legs"))
 
 ;; _____________________________________________________________________________
 ;; FUNCTIONS:
@@ -47,23 +55,8 @@
                              (string=? (first los) (part-class n)))]
                      (cons (filter p? lop)
                            (fn-for-part-list (rest los))))]))]
-    (fn-for-part-list (find-classes part-list))))
-            
-  
+    (fn-for-part-list part-order)))
 
-;; find-classes
-;; Signature: (listof Part -> (listof String)
-;; Find all classes used in the part-list
 
-(check-expect (find-classes part-list) (list "head" "torso" "arms" "legs"))
-
-(define (find-classes lop)
-  (local
-    [(define (fn-for-lop lop rsf)
-       (cond [(empty? lop) rsf]
-             [else (local [(define current-class (part-class (first lop)))]
-                     (if (member current-class rsf)
-                         (fn-for-lop (rest lop) rsf)
-                         (fn-for-lop (rest lop)
-                                     (append rsf (list current-class)))))]))]
-    (fn-for-lop lop empty)))
+;; render-image
+;; Signature: (listof Part) -> Image
