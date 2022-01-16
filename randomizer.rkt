@@ -48,13 +48,13 @@
               (bitmap/url "https://art.pixilart.com/123417353a02516.png") 1)
    
    (make-part "legs"
-              (bitmap/url "https://art.pixilart.com/0d56bb8c5e6e559.png") 1)
+              (bitmap/url "https://art.pixilart.com/48135ea61b467ae.png") 1)
    (make-part "legs"
-              (bitmap/url "https://art.pixilart.com/1cbd16a015ccec5.png") 1)
+              (bitmap/url "https://art.pixilart.com/70279cc085a329e.png") 1)
    (make-part "legs"
-              (bitmap/url "https://art.pixilart.com/cc8cb75525059b5.png") 1)
+              (bitmap/url "https://art.pixilart.com/c04f0e3e911b634.png") 1)
    (make-part "legs"
-              (bitmap/url "https://art.pixilart.com/6c51812878436d2.png") 1)
+              (bitmap/url "https://art.pixilart.com/aa2b1032c528885.png") 1)
    
    (make-part "head"
               (bitmap/url "https://art.pixilart.com/1a4a62ccf72a5d0.png") 1)
@@ -85,22 +85,6 @@
 ;; Width and height of the image canvas.
 (define WIDTH 1200)
 (define HEIGHT 1200)
-
-;; Potential background colors of the image. Each background has an equal chance
-;; of being used in the image.
-(define BACKGROUND-COLOR-LIST
-  (list "white"
-        "green"
-        "blue"
-        "yellow"
-        "purple"
-        "grey"
-        "turquoise"
-        "light turquoise"
-        "cyan"
-        "goldenrod"
-        "light red"
-        "pink"))
 
 ;; Image Scale Factor:
 ;; Use this function if the image is too big/small for your screen.
@@ -208,7 +192,10 @@
   (cond [(empty? lop) (rectangle WIDTH
                                  HEIGHT
                                  "solid"
-                                 (background-randomizer BACKGROUND-COLOR-LIST))]
+                                 (make-color (random 256)
+                                             (random 256)
+                                             (random 256)
+                                             255))]
         [else (overlay (first lop)
                        (render-image (rest lop)))]))
 
