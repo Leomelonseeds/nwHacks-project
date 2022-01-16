@@ -16,6 +16,7 @@
 ;; brush_width is Natural ; width of brush mode
 ;; mode is one of square or circle ; images on screen
 ;; color is any avaliable color enum or (make-color r g b a)
+;; eraser is Boolean ; whether eraser is enabled
 
 ;; _____________________________________________________________________________
 ;; USER VARIABLES:
@@ -27,11 +28,29 @@
 
 ;; Define a custom color by using (make-color r g b a)
 ;; No duplicates please
-(define COLORS (list "green" "blue" "red" "orange" "purple"))
+(define COLORS (list "red"
+                     "light red"
+                     "goldenrod"
+                     "yellow"
+                     "green"
+                     "cyan"
+                     "light turquoise"
+                     "turquoise"
+                     "blue"
+                     "pink"
+                     "purple"
+                     "white"
+                     "gray"
+                     "black"
+                     ))
 
 ;; Hotkeys
 (define HOTKEY-SAVE "s")
-(define HOTKEY-TOGGLE_ERASER "e")
+;; Resets state to default-image, instead of clearing
+;; Racket is stupid and won't let you mask a transparent image
+;; this has removed my ability to implement an eraser.
+;; Use reset and save often if you want to make changes
+(define HOTKEY-RESET "escape")
 (define HOTKEY-TOGGLE_MODE " ")
 (define HOTKEY-CYCLE_COLOR_RIGHT "right")
 (define HOTKEY-CYCLE_COLOR_LEFT "left")
@@ -105,9 +124,14 @@
         [(key=? ke HOTKEY-TOGGLE_MODE)
          (make-canvas (canvas-image c)
                       (canvas-brush_width c)
-                      (if (eqv? (canvas-mode c) square)
+                      (if (f-equal? (canvas-mode c) square)
                           circle
                           square)
+                      (canvas-color c))]
+        [(key=? ke HOTKEY-RESET)
+         (make-canvas default-image
+                      (canvas-brush_width c)
+                      (canvas-mode c)
                       (canvas-color c))]
         [(key=? ke HOTKEY-CYCLE_COLOR_RIGHT)
          (make-canvas (canvas-image c)
@@ -170,6 +194,14 @@
         [else (if (empty? (rest loc))
                   (first loc)
                   (select-last-color (rest loc)))]))
+
+;; f-equal?
+;; Signature: x y -> Boolean, x and y both functions
+;; Compares two image functions to see if equal
+
+(define (f-equal? x y)
+  (equal? (x 1 "solid" "white")
+          (y 1 "solid" "white")))
 
 
 (main default-canvas)
