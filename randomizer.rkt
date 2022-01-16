@@ -206,5 +206,7 @@
 (define (background-randomizer los)
   (list-ref los (random (length los))))
 
-(main (randomizer part-list))
+(define image-randomizer (main (randomizer part-list)))
+
+image-randomizer
   

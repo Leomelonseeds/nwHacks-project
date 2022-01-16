@@ -24,7 +24,7 @@
 (define WIDTH 1200)
 (define HEIGHT 1200)
 
-(define IMAGE-PATH "images/image.png")
+(define IMAGE-PATH (bitmap/file "images/image.png"))
 
 ;; Define a custom color by using (make-color r g b a)
 ;; No duplicates please
@@ -58,8 +58,8 @@
 (define HOTKEY-DECREASE_BRUSH_SIZE "down")
 
 
-;; Change default-image to (bitmap/file "image.png") to open existing project
-; (define default-image (bitmap/file "image.png"))
+;; Change default-image to IMAGE-PATH to open existing project
+; (define default-image IMAGE-PATH)
 (define default-image (rectangle WIDTH HEIGHT "solid" "transparent"))
 (define default-brush_width 2)
 ;; Must be either square or circle
@@ -78,7 +78,7 @@
 ;; main function, uses big bang
 ;; Signature: canvas -> canvas
 
-(define (main c)
+(define (paint c)
   (big-bang c
     (to-draw render-canvas)
     (on-mouse handle-mouse)
@@ -204,4 +204,9 @@
           (y 1 "solid" "white")))
 
 
-(main default-canvas)
+(define (painter path) (paint (make-canvas (bitmap/file path)
+                                           default-brush_width
+                                           default-mode
+                                           default-color)))
+
+(paint default-canvas)
