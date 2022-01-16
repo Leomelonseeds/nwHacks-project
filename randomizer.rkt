@@ -86,28 +86,9 @@
 (define WIDTH 1200)
 (define HEIGHT 1200)
 
-;; Potential background colors of the image. Each background has an equal chance
-;; of being used in the image.
-(define BACKGROUND-COLOR-LIST
-  (list "white"
-        "green"
-        "blue"
-        "yellow"
-        "purple"
-        "grey"
-        "turquoise"
-        "light turquoise"
-        "cyan"
-        "goldenrod"
-        "light red"
-        "pink"))
-
-;; Image Scale Factor:
-(define SCALE-FACTOR 0.5)
-
 ;; Hotkeys
-(define HOTKEY-NEW-IMAGE " ") ;; HOTKEY is 'SPACE'
-(define HOTKEY-SAVE "s")      ;; HOTKEY is 'S'
+(define HOTKEY-NEW-IMAGE " ")
+(define HOTKEY-SAVE "s")
 
 ;; Where and name to save liked files
 (define IMAGE-PATH "images/ilikethis.png")
@@ -152,7 +133,7 @@
 (define (randomizer lop1)
   (local [(define (randomizer lolop rsf)
             ;; rsf is (listof Image) ; listof chosen images so far
-            (cond [(empty? lolop) (scale SCALE-FACTOR (render-image rsf))]
+            (cond [(empty? lolop) (render-image rsf)]
                   [else
                    (randomizer (rest lolop)
                                (cons
@@ -207,7 +188,7 @@
   (cond [(empty? lop) (rectangle WIDTH
                                  HEIGHT
                                  "solid"
-                                 (background-randomizer BACKGROUND-COLOR-LIST))]
+                                 (make-color (random 256) (random 256) (random 256) 255))]
         [else (overlay (first lop)
                        (render-image (rest lop)))]))
 
