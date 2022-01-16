@@ -23,11 +23,29 @@
 (define WIDTH 400)
 (define HEIGHT 400)
 
+(define IMAGE-PATH "images/image.png")
+
+;; Define a custom color by using (make-color r g b a)
+;; No duplicates please
+(define COLORS (list "green" "blue" "red" "orange" "purple"))
+
+;; Hotkeys
+(define HOTKEY-SAVE "s")
+(define HOTKEY-TOGGLE_ERASER "e")
+(define HOTKEY-TOGGLE_MODE " ")
+(define HOTKEY-CYCLE_COLOR_RIGHT "right")
+(define HOTKEY-CYCLE_COLOR_LEFT "left")
+(define HOTKEY-INCREASE_BRUSH_SIZE "up")
+(define HOTKEY-DECREASE_BRUSH_SIZE "down")
+
+
 ;; Change default-image to (bitmap/file "image.png") to open existing project
-(define default-image (bitmap/file "image.png"))
-; (define default-image (rectangle WIDTH HEIGHT "solid" "transparent"))
+; (define default-image (bitmap/file "image.png"))
+(define default-image (rectangle WIDTH HEIGHT "solid" "transparent"))
 (define default-brush_width 2)
+;; Must be either square or circle
 (define default-mode square)
+;; Must be defined in COLORS
 (define default-color "green")
 
 (define default-canvas (make-canvas default-image
@@ -52,7 +70,13 @@
 ;; Signature: Canvas -> Image
 
 (define (render-canvas c)
-  (canvas-image c))
+  (overlay/align "left" "top"
+                 (overlay (text (number->string (canvas-brush_width c))
+                                10 "black")
+                          ((canvas-mode c) (+ (canvas-brush_width c) 10)
+                                           "solid"
+                                           (canvas-color c)))
+                 (canvas-image c)))
 
 ;; handle-mouse
 ;; Signature: Canvas Integer Integer MouseEvent -> Canvas
@@ -74,11 +98,78 @@
 ;; Signature: Canvas KeyEvent -> Canvas
 
 (define (handle-key c ke)
-  (cond [(key=? ke "s")
-         (if (save-image (canvas-image c) "image.png")
+  (cond [(key=? ke HOTKEY-SAVE)
+         (if (save-image (canvas-image c) IMAGE-PATH)
              c
              (error "Save failed."))]
+        [(key=? ke HOTKEY-TOGGLE_MODE)
+         (make-canvas (canvas-image c)
+                      (canvas-brush_width c)
+                      (if (eqv? (canvas-mode c) square)
+                          circle
+                          square)
+                      (canvas-color c))]
+        [(key=? ke HOTKEY-CYCLE_COLOR_RIGHT)
+         (make-canvas (canvas-image c)
+                      (canvas-brush_width c)
+                      (canvas-mode c)
+                      (cycle-right (canvas-color c)))]
+        [(key=? ke HOTKEY-CYCLE_COLOR_LEFT)
+         (make-canvas (canvas-image c)
+                      (canvas-brush_width c)
+                      (canvas-mode c)
+                      (cycle-left (canvas-color c)))]
+        [(key=? ke HOTKEY-INCREASE_BRUSH_SIZE)
+         (make-canvas (canvas-image c)
+                      (add1 (canvas-brush_width c))
+                      (canvas-mode c)
+                      (canvas-color c))]
+        [(key=? ke HOTKEY-DECREASE_BRUSH_SIZE)
+         (make-canvas (canvas-image c)
+                      (if (< (canvas-brush_width c) 2)
+                          1
+                          (sub1 (canvas-brush_width c)))
+                      (canvas-mode c)
+                      (canvas-color c))]
         [else c]))
+
+;; cycle-right
+;; Signature: String -> String
+;; selects next color in colors list, circle back if last color
+
+(define (cycle-right c)
+  (local [(define (fn-for-loc loc c)
+            (cond [(empty? loc) (error "Your color list is empty!")]
+                  [else (if (string=? (first loc) c)
+                            (if (empty? (rest loc))
+                                (first COLORS)
+                                (first (rest loc)))
+                            (fn-for-loc (rest loc) c))]))]
+    (fn-for-loc COLORS c)))
+
+;; cycle-left
+;; Signature: String -> String
+;; selects last color in colors list, circle forward if first color
+
+(define (cycle-left c)
+  (local [(define (fn-for-loc loc c last-color)
+            (cond [(empty? loc) (error "Your color list is empty!")]
+                  [else (if (string=? (first loc) c)
+                            (if (string=? last-color "")
+                                (select-last-color COLORS)
+                                last-color)
+                            (fn-for-loc (rest loc) c (first loc)))]))]
+    (fn-for-loc COLORS c "")))
+
+;; select-last-color
+;; Signature: (listof Color) -> String
+;; finds last color of the list
+
+(define (select-last-color loc)
+  (cond [(empty? loc) (error "Your color list is empty!")]
+        [else (if (empty? (rest loc))
+                  (first loc)
+                  (select-last-color (rest loc)))]))
 
 
 (main default-canvas)
