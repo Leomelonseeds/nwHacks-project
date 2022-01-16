@@ -102,9 +102,12 @@
         "light red"
         "pink"))
 
+;; Image Scale Factor:
+(define SCALE-FACTOR 0.5)
+
 ;; Hotkeys
-(define HOTKEY-NEW-IMAGE " ")
-(define HOTKEY-SAVE "s")
+(define HOTKEY-NEW-IMAGE " ") ;; HOTKEY is 'SPACE'
+(define HOTKEY-SAVE "s")      ;; HOTKEY is 'S'
 
 ;; Where and name to save liked files
 (define IMAGE-PATH "images/ilikethis.png")
@@ -149,7 +152,7 @@
 (define (randomizer lop1)
   (local [(define (randomizer lolop rsf)
             ;; rsf is (listof Image) ; listof chosen images so far
-            (cond [(empty? lolop) (render-image rsf)]
+            (cond [(empty? lolop) (scale SCALE-FACTOR (render-image rsf))]
                   [else
                    (randomizer (rest lolop)
                                (cons
