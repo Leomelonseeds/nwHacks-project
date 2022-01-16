@@ -40,6 +40,13 @@
 ;; on the top layer, and the last class will be put on the bottom, and vv.
 (define part-order (list "head" "torso" "arms" "legs"))
 
+;; Width and height of the image canvas.
+(define WIDTH 400)
+(define HEIGHT 400)
+
+;; Background color of the image.
+(define BACKGROUND-COLOR "white")
+
 ;; _____________________________________________________________________________
 ;; FUNCTIONS:
 
@@ -60,3 +67,14 @@
 
 ;; render-image
 ;; Signature: (listof Part) -> Image
+
+(define (render-image lop)
+  (cond [(empty? lop) (rectangle WIDTH
+                                 HEIGHT
+                                 "solid"
+                                 BACKGROUND-COLOR)]
+        [else (overlay (part-image (first lop))
+                       (render-image (rest lop)))]))
+
+; (render-image (first (separate part-list)))
+  
