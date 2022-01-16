@@ -9,43 +9,88 @@
 
 ;; Class is String, one of:
 ;; "head", "torso", "arms", "legs"
-;; Represents the body portion the part represents.
+;; Represents the body portion that the part represents.
 ;; Works with custom classes.
 
 
-;; Part is
+;; Part:
 (define-struct part (class image chance))
-;; class is Class ; the body portion
+;; class is String ; the body portion
 ;; image is Image ; the image of the portion
 ;; chance is Natural ; weighted rarity, where higher numbers are more common
 
 ;;______________________________________________________________________________
 ;; USER CONFIGURATION:
 
-;; Part list. Add your own image parts here. Order does not matter
+;; Part list. Add your own image parts here. Order does not matter.
+;; *ENSURE THAT CHANCE is an integer > 0
 (define part-list
   (list 
-   (make-part "head" (circle 20 "solid" "blue") 5)
-   (make-part "torso" (rectangle 10 30 "solid" "black") 1)
-   (make-part "torso" (rectangle 20 30 "solid" "green") 2)
-   (make-part "arms" (rectangle 30 10 "solid" "white") 3)
-   (make-part "arms" (rectangle 40 10 "solid" "white") 1)
-   (make-part "legs" (rectangle 10 60 "solid" "red") 5)
-   (make-part "legs" (rectangle 20 70 "solid" "white") 2)
-   (make-part "head" (rectangle 20 10 "solid" "green") 6)
+   (make-part "arms"
+              (bitmap/url "https://art.pixilart.com/1b6e194722e1716.png") 1)
+   (make-part "arms"
+              (bitmap/url "https://art.pixilart.com/230253694f0a431.png") 1)
+   (make-part "arms"
+              (bitmap/url "https://art.pixilart.com/2a847c530cf0d22.png") 1)
+   (make-part "arms"
+              (bitmap/url "https://art.pixilart.com/8f34d7ff8b3151e.png") 1)
+   
+   (make-part "torso"
+              (bitmap/url "https://art.pixilart.com/5374f2ff0f8f319.png") 1)
+   (make-part "torso"
+              (bitmap/url "https://art.pixilart.com/0903dfc0f4b7f4f.png") 1)
+   (make-part "torso"
+              (bitmap/url "https://art.pixilart.com/bc91e02dc27cc8e.png") 1)
+   (make-part "torso"
+              (bitmap/url "https://art.pixilart.com/123417353a02516.png") 1)
+   
+   (make-part "legs"
+              (bitmap/url "https://art.pixilart.com/0d56bb8c5e6e559.png") 1)
+   (make-part "legs"
+              (bitmap/url "https://art.pixilart.com/1cbd16a015ccec5.png") 1)
+   (make-part "legs"
+              (bitmap/url "https://art.pixilart.com/cc8cb75525059b5.png") 1)
+   (make-part "legs"
+              (bitmap/url "https://art.pixilart.com/6c51812878436d2.png") 1)
+   
+   (make-part "head"
+              (bitmap/url "https://art.pixilart.com/1a4a62ccf72a5d0.png") 1)
+   (make-part "head"
+              (bitmap/url "https://art.pixilart.com/2f9778f573bd86f.png") 1)
+   (make-part "head"
+              (bitmap/url "https://art.pixilart.com/582edbf44e31f17.png") 1)
+   (make-part "head"
+              (bitmap/url "https://art.pixilart.com/af0e266b0035339.png") 1)
+   
+   (make-part "accessory"
+              (bitmap/url "https://art.pixilart.com/6b28aca5d9ed84a.png") 1)
+   (make-part "accessory"
+              (bitmap/url "https://art.pixilart.com/89e5514d3720269.png") 1)
+   (make-part "accessory"
+              (bitmap/url "https://art.pixilart.com/f6a88b9d8371d38.png") 1)
+   (make-part "accessory"
+              (bitmap/url "https://art.pixilart.com/dfb3a1b76fc33ba.png") 1)
+   (make-part "accessory"
+              empty-image 4)
    ))
 
 ;; The order that the body parts should be overlayed. This value also determines
 ;; which classes in the part-list is used. The first defined class will render
 ;; on the top layer, and the last class will be put on the bottom, and vv.
-(define part-order (list "head" "torso" "arms" "legs"))
+(define part-order (list "head" "torso" "arms" "legs" "accessory"))
 
 ;; Width and height of the image canvas.
-(define WIDTH 400)
-(define HEIGHT 400)
+(define WIDTH 1200)
+(define HEIGHT 1200)
 
-;; Background color of the image.
-(define BACKGROUND-COLOR "white")
+;; Potential background colors of the image. Each background has an equal chance
+;; of being used in the image.
+(define BACKGROUND-COLOR-LIST
+  (list "white"
+        "green"
+        "blue"
+        "yellow"
+        "purple"))
 
 ;; _____________________________________________________________________________
 ;; FUNCTIONS:
@@ -77,8 +122,11 @@
                                                  rsf2))]))
           ;; Signature: Natural Image (listof Image) -> (listof Image)
           (define (randomizer-p chance img rsf3)
-            (local [(define (f1 n) img)]
-              (append rsf3 (build-list chance f1))))
+            (cond [(or (< chance 1) (not (integer? chance)))
+                   (error "PLEASE ENSURE EACH CHANCE VALUE FOLLOWS THE RULES")]
+                  [else
+                   (local [(define (f1 n) img)]
+                     (append rsf3 (build-list chance f1)))]))
 
           ;; Signature: (listof Image) -> Image
           ;; Takes in a listof Image and produces a single random chance image
@@ -108,9 +156,13 @@
   (cond [(empty? lop) (rectangle WIDTH
                                  HEIGHT
                                  "solid"
-                                 BACKGROUND-COLOR)]
+                                 (background-randomizer BACKGROUND-COLOR-LIST))]
         [else (overlay (first lop)
                        (render-image (rest lop)))]))
 
-; (render-image (first (separate part-list)))
+;; background-randomizer
+;; Signature: (listof String) -> String
+
+(define (background-randomizer los)
+  (list-ref los (random (length los))))
   
