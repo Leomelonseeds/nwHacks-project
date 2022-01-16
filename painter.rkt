@@ -24,7 +24,7 @@
 (define WIDTH 1200)
 (define HEIGHT 1200)
 
-(define IMAGE-PATH (bitmap/file "images/image.png"))
+(define IMAGE-PATH "images/image.png")
 
 ;; Define a custom color by using (make-color r g b a)
 ;; No duplicates please
