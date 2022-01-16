@@ -3,9 +3,3 @@
 #reader(lib "htdp-intermediate-lambda-reader.ss" "lang")((modname randomizer) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #t)))
 (require 2htdp/image)
 (require 2htdp/universe)
-
-;; _____________________________________________________________________________
-;; DATA DEFINITIONS:
-
-;; Head, body, arms, legs
-
