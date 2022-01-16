@@ -9,32 +9,3 @@
 
 ;; Head, body, arms, legs
 
-
-
-;; Head is
-(define-struct head (image chance))
-;; image is Image ; head image
-;; chance is Natural ; rarity %, where higher numbers are more common
-
-(define head1 (make-head (circle 20 "solid" "blue") 5))
-(define head2 (make-head (rectangle 20 10 "solid" "green") 6))
-
-;; Body is
-(define-struct body (image chance))
-;; image is Image ; body image
-;; chance is Natural; rarity %, where higher numbers are more common
-(define (make-head (circle 15 "solid" "blue") 10))
-
-;; Arms is
-(define-struct arms (image chance))
-;; image is Image ; arms image
-;; chance is Natural; rarity %, where higher numbers are more common
-(define (make-head (circle 15 "solid" "blue") 10))
-
-;; Legs is
-(define-struct legs (image chance))
-;; image is Image ; legs image
-;; chance is Natural; rarity %, where higher numbers are more common
-(define (make-head (circle 15 "solid" "blue") 10))
-
-(define hello "hello-world")
