@@ -50,6 +50,42 @@
 ;; _____________________________________________________________________________
 ;; FUNCTIONS:
 
+;; Signature: (listof (listof Part)) -> (listof Image)
+;; Takes a list of all of the parts of the image and randomly selects
+;; one of each part to be added to a (listof Image)
+
+(define (randomizer lop1)
+  (local [(define (randomizer lolop rsf)
+            ;; rsf is (listof Image) ; listof chosen images so far
+            (cond [(empty? lolop) (render-image rsf)]
+                  [else
+                   (randomizer (rest lolop)
+                               (cons
+                                (randomizer-lop (first lolop) empty)
+                                rsf))]))
+
+          ;; Signature: (listof Part) (listof Image) -> (listof Image)
+          ;; Goes from multiple listof Part to listof Image
+          (define (randomizer-lop lop rsf2)
+            ;; rsf2 is (listof Image)
+            (cond [(empty? lop)
+                   (chose-random rsf2)]
+                  [else
+                   (randomizer-lop (rest lop)
+                                   (randomizer-p (part-chance (first lop))
+                                                 (part-image (first lop))
+                                                 rsf2))]))
+          ;; Signature: Natural Image (listof Image) -> (listof Image)
+          (define (randomizer-p chance img rsf3)
+            (local [(define (f1 n) img)]
+              (append rsf3 (build-list chance f1))))
+
+          ;; Signature: (listof Image) -> Image
+          ;; Takes in a listof Image and produces a single random chance image
+          (define (chose-random loi)
+            (list-ref loi (random (length loi))))]
+    (randomizer (separate lop1) empty)))
+
 ;; separate
 ;; Signature: (listof Part) -> (listof (listof Part))
 ;; Creates an list of the list of each body part
@@ -73,7 +109,7 @@
                                  HEIGHT
                                  "solid"
                                  BACKGROUND-COLOR)]
-        [else (overlay (part-image (first lop))
+        [else (overlay (first lop)
                        (render-image (rest lop)))]))
 
 ; (render-image (first (separate part-list)))
