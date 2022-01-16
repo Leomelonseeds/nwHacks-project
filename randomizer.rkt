@@ -19,6 +19,9 @@
 ;; image is Image ; the image of the portion
 ;; chance is Natural ; weighted rarity, where higher numbers are more common
 
+;; RandomizerImage is image
+;; Represents the currently generated image
+
 ;;______________________________________________________________________________
 ;; USER CONFIGURATION:
 
@@ -92,12 +95,47 @@
         "yellow"
         "purple"))
 
+;; Hotkeys
+(define HOTKEY-NEW-IMAGE " ")
+(define HOTKEY-SAVE "s")
+
+;; Where and name to save liked files
+(define IMAGE-PATH "images/ilikethis.png")
+
 ;; _____________________________________________________________________________
 ;; FUNCTIONS:
 
-;; Signature: (listof (listof Part)) -> (listof Image)
+;; main
+;; Signature: RandomizerImage -> RandomizerImage
+
+(define (main ri)
+  (big-bang ri
+    (to-draw render-world)
+    (on-key handle-key)))
+
+
+;; render-world
+;; Signature: RandomizerImage -> Image
+;; Takes current image and renders it into the world program
+
+(define (render-world ri)
+  ri)
+
+;; handle-key
+;; Signature: RandomizerImage KeyEvent -> RandomizerImage
+;; Manages creation of new images and saving liked images
+
+(define (handle-key ri ke)
+  (cond [(key=? ke HOTKEY-NEW-IMAGE) (randomizer part-list)]
+        [(key=? ke HOTKEY-SAVE)
+         (if (save-image ri IMAGE-PATH)
+             ri
+             (error "Save failed."))]
+        [else ri]))
+
+;; Signature: (listof (listof Part)) -> Image
 ;; Takes a list of all of the parts of the image and randomly selects
-;; one of each part to be added to a (listof Image)
+;; one of each part to be added to a (listof Image), then returns rendered img
 
 (define (randomizer lop1)
   (local [(define (randomizer lolop rsf)
@@ -165,4 +203,6 @@
 
 (define (background-randomizer los)
   (list-ref los (random (length los))))
+
+(main (randomizer part-list))
   

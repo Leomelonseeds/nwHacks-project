@@ -21,8 +21,8 @@
 ;; _____________________________________________________________________________
 ;; USER VARIABLES:
 
-(define WIDTH 400)
-(define HEIGHT 400)
+(define WIDTH 1200)
+(define HEIGHT 1200)
 
 (define IMAGE-PATH "images/image.png")
 
