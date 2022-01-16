@@ -86,22 +86,6 @@
 (define WIDTH 1200)
 (define HEIGHT 1200)
 
-;; Potential background colors of the image. Each background has an equal chance
-;; of being used in the image.
-(define BACKGROUND-COLOR-LIST
-  (list "white"
-        "green"
-        "blue"
-        "yellow"
-        "purple"
-        "grey"
-        "turquoise"
-        "light turquoise"
-        "cyan"
-        "goldenrod"
-        "light red"
-        "pink"))
-
 ;; Hotkeys
 (define HOTKEY-NEW-IMAGE " ")
 (define HOTKEY-SAVE "s")
@@ -204,7 +188,7 @@
   (cond [(empty? lop) (rectangle WIDTH
                                  HEIGHT
                                  "solid"
-                                 (background-randomizer BACKGROUND-COLOR-LIST))]
+                                 (make-color (random 256) (random 256) (random 256) 255))]
         [else (overlay (first lop)
                        (render-image (rest lop)))]))
 
